@@ -22,3 +22,4 @@ $router->get('fetchDevices', 'ExampleController@getDevices');
 $router->get('getToken', 'KaiOSController@getToken');
 $router->get('getAccounts', 'KaiOSController@getAccounts');
 $router->get('notifyPaid', 'KaiOSController@notifyPaid');
+$router->get('getImei','KaiOSController@getDeviceImei');

@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 //use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
+use http\Env\Request;
 
 class KaiOSController extends Controller
 {
@@ -14,7 +15,6 @@ class KaiOSController extends Controller
     {
         //
     }
-
     public function getToken() {
         $hawk = new \Hawk();
         $post_parameters = array(
@@ -94,5 +94,4 @@ class KaiOSController extends Controller
         $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/notify_paid', 'POST', $header, $params);
         print_r($notify); die;
     }
-
 }

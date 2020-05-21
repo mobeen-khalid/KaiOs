@@ -23,3 +23,9 @@ $router->get('getToken', 'KaiOSController@getToken');
 $router->get('getAccounts', 'KaiOSController@getAccounts');
 $router->get('notifyPaid', 'KaiOSController@notifyPaid');
 $router->get('getImei','KaiOSController@getDeviceImei');
+$router->get('getImeiPing','KaiOSController@imeiPing');
+$router->get('massPaymentnotify','KaiOSController@massPaymentnotify');
+$router->get('creditCompletion','KaiOSController@creditCompletion');
+$router->get('masscreditCompletionNotify','KaiOSController@masscreditCompletionNotify');
+//
+

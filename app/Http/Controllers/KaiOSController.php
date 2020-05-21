@@ -213,7 +213,7 @@ class KaiOSController extends Controller
 
           $params = json_encode(array("390101540012341","390101540075318","390101540509512"), true);
         //  $params = json_encode(array('"390101540012341":' => array('next_pay_dl' => 1591568817)), true);
-          return($params);
+     //     return($params);
 
         //   $encoded_hash = $hawk->normalizePayload($params);
 

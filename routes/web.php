@@ -27,5 +27,7 @@ $router->get('getImeiPing','KaiOSController@imeiPing');
 $router->get('massPaymentnotify','KaiOSController@massPaymentnotify');
 $router->get('creditCompletion','KaiOSController@creditCompletion');
 $router->get('masscreditCompletionNotify','KaiOSController@masscreditCompletionNotify');
+$router->get('/dashboard','DashboardController@getDashboard');
 //
+
 

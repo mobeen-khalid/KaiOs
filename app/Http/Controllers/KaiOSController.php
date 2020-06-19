@@ -55,7 +55,7 @@ class KaiOSController extends Controller
         $hawk = new \Hawk();
         $nonce = $hawk->generateNonce();
 
-        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'GET', '/core/v1.0/accounts/me', 'rQHTgys7n6AbOP5e6ctqAC8UQeNKUIICmTpfW0zKg4w=');
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'GET', '/core/v1.0/accounts/me', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
 
         $curl = curl_init();
         $header = array(
@@ -63,7 +63,7 @@ class KaiOSController extends Controller
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="VzgiDoRSh4qlc0INYVPK+5RW1O0=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
         );
 
         $response = $hawk->sendRequest('/core/v1.0/accounts/me', 'GET', $header);
@@ -80,7 +80,7 @@ class KaiOSController extends Controller
         $nonce = $hawk->generateNonce();
 
         $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
-            '/financier_be/v1.0/devices/192168718812411/notify_paid', 'rQHTgys7n6AbOP5e6ctqAC8UQeNKUIICmTpfW0zKg4w=',
+            '/financier_be/v1.0/devices/192168718812411/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',
             $encoded_hash);
 
         $header = array(
@@ -88,7 +88,7 @@ class KaiOSController extends Controller
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="VzgiDoRSh4qlc0INYVPK+5RW1O0=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' . $encoded_hash . '", mac="' . $compute_header . '"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' . $encoded_hash . '", mac="' . $compute_header . '"'
         );
 
         $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/notify_paid', 'POST', $header, $params);
@@ -107,14 +107,14 @@ class KaiOSController extends Controller
 
 
         $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'GET',
-            '/financier_be/v1.0/devices/192168718812411', 'm5n8EEom2nhkDD2R5K5nq1dhcuAQ8kSXbskaIjQF3Qg=');
+            '/financier_be/v1.0/devices/192168718812411', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
 
         $header = array(
             "GET /financier_be/v1.0/devices/192168718812411 HTTP/1.1",
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="0X/IdtuBm1HRdmiQX9SVsZuUOoQ=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
         );
 
         $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411', 'GET', $header);
@@ -123,88 +123,130 @@ class KaiOSController extends Controller
     }
 
 
-
-
-
-    public function imeiPing()
-    {
-
+    public function imeiPing() {
+        $current_timestamp = Carbon::now('UTC')->timestamp;
 
         $hawk = new \Hawk();
-        $current_timestamp = Carbon::now('UTC')->timestamp;
-        //   $params = json_encode(array('next_pay_dl' => 1591568817), true);
-
-        //    $encoded_hash = $hawk->normalizePayload($params);
         $nonce = $hawk->generateNonce();
 
-
         $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'GET',
-            '/financier_be/v1.0/devices/192168718812411/ping', 'm5n8EEom2nhkDD2R5K5nq1dhcuAQ8kSXbskaIjQF3Qg=');
+            '/financier_be/v1.0/devices/192168718812411/ping', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
 
+        $curl = curl_init();
         $header = array(
             "GET /financier_be/v1.0/devices/192168718812411/ping HTTP/1.1",
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="0X/IdtuBm1HRdmiQX9SVsZuUOoQ=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
         );
 
-        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/ping', 'GET', $header);
-
-        print_r($notify); die;
+        $response = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/ping', 'GET', $header);
+        print_r($response); die;
     }
 
 
-    public function massPaymentnotify() {
+    public function massPaymentnotifyTest() {
         $hawk = new \Hawk();
         $current_timestamp = Carbon::now('UTC')->timestamp;
-      //  $params = json_encode(array('next_pay_dl' => 1591568817), true);
-        $params = json_encode(array("390101540012341" => array("next_pay_dl" => 1591568817),"390101540012343" => array("next_pay_dl" =>1591568817)),true);
 
+        $params = json_encode(array("192168718812411" => array("next_pay_dl" => 1595158826)), true);
 
         $encoded_hash = $hawk->normalizePayload($params);
         $nonce = $hawk->generateNonce();
 
         $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
-            '/financier_be/v1.0/devices/192168718812411/notify_paid', 'rQHTgys7n6AbOP5e6ctqAC8UQeNKUIICmTpfW0zKg4w=',
+            '/financier_be/v1.0/devices/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',
             $encoded_hash);
 
         $header = array(
-            "POST /financier_be/v1.0/devices/192168718812411/notify_paid HTTP/1.1",
+            "POST /financier_be/v1.0/devices/notify_paid HTTP/1.1",
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="VzgiDoRSh4qlc0INYVPK+5RW1O0=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' . $encoded_hash . '", mac="' . $compute_header . '"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' . $encoded_hash . '", mac="' . $compute_header . '"'
         );
 
-        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/notify_paid', 'POST', $header, $params);
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/notify_paid', 'POST', $header, $params);
+        print_r($notify); die;
+    }
+
+    public function massPaymentnotify() {
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+      //  $params = json_encode(array('next_pay_dl' => 1591568817), true);
+        $params = json_encode(array("192168718812411" => array("next_pay_dl" => 1595158826)),true);
+//        dd($params);
+
+        $encoded_hash = $hawk->normalizePayload($params);
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_be/v1.0/devices/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',
+            $encoded_hash);
+
+        $header = array(
+            "POST /financier_be/v1.0/devices/notify_paid HTTP/1.1",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' . $encoded_hash . '", mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/notify_paid', 'POST', $header, $params);
         print_r($notify); die;
     }
 
     public function creditCompletion() {
         $hawk = new \Hawk();
         $current_timestamp = Carbon::now('UTC')->timestamp;
-        //  $params = json_encode(array('next_pay_dl' => 1591568817), true);
-      //  $params = json_encode(array('"390101540012341":' => array('next_pay_dl' => 1591568817)), true);
-      //  return($params);
 
-     //   $encoded_hash = $hawk->normalizePayload($params);
+        $params = json_encode(array("390101540075318"), true);
+
+        $encoded_hash = $hawk->normalizePayload($params);
         $nonce = $hawk->generateNonce();
 
         $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
-            '/financier_be/v1.0/devices/192168718812411/notify_credit_completed', 'rQHTgys7n6AbOP5e6ctqAC8UQeNKUIICmTpfW0zKg4w=');
+            '/financier_be/v1.0/devices/390101540075318/notify_credit_completed', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',
+            $encoded_hash);
 
         $header = array(
-            "POST /financier_be/v1.0/devices/192168718812411/notify_credit_completed HTTP/1.1",
+            "POST /financier_be/v1.0/devices/390101540075318/notify_credit_completed HTTP/1.1",
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="VzgiDoRSh4qlc0INYVPK+5RW1O0=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' .$encoded_hash. '", mac="' . $compute_header . '"'
         );
-        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/notify_credit_completed', 'POST', $header);
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/390101540075318/notify_credit_completed', 'POST', $header, $params);
         print_r($notify); die;
     }
 
+
+    public function masscreditCompletionNotifyTest() {
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $params = json_encode(array("192168718812411","390101540075318","390101540509512"), true);
+
+        $encoded_hash = $hawk->normalizePayload($params);
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_be/v1.0/devices/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',
+            $encoded_hash);
+
+        $header = array(
+            "POST /financier_be/v1.0/devices/notify_paid HTTP/1.1",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '", hash="' . $encoded_hash . '", mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/notify_paid', 'POST', $header, $params);
+        print_r($notify); die;
+    }
 
     public function masscreditCompletionNotify() {
 
@@ -220,14 +262,14 @@ class KaiOSController extends Controller
         $nonce = $hawk->generateNonce();
 
         $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
-            '/financier_be/v1.0/devices/192168718812411/notify_credit_completed', 'rQHTgys7n6AbOP5e6ctqAC8UQeNKUIICmTpfW0zKg4w=');
+            '/financier_be/v1.0/devices/192168718812411/notify_credit_completed', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
 
         $header = array(
             "POST /financier_be/v1.0/devices/192168718812411/notify_credit_completed HTTP/1.1",
             "Host: api.test.kaiostech.com:443",
             "Content-Type: application/json",
             "Content-Size: 1255",
-            'Authorization: Hawk id="VzgiDoRSh4qlc0INYVPK+5RW1O0=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
         );
 
         $notify = $hawk->sendRequest('/financier_be/v1.0/devices/192168718812411/notify_credit_completed', 'POST', $header);

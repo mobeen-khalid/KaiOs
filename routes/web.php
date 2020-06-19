@@ -30,6 +30,7 @@ $router->get('creditCompletion','KaiOSController@creditCompletion');
 $router->get('masscreditCompletionNotify','KaiOSController@masscreditCompletionNotify');
 $router->get('masscreditCompletionNotifyTest','KaiOSController@masscreditCompletionNotifyTest');
 $router->get('/dashboard','DashboardController@getDashboard');
+$router->get('/myTestRoute','DashboardController@getDashboard');
 //
 
 

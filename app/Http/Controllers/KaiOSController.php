@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 //use App\Http\Controllers\Controller;
 
+use App\Helpers\Helper;
 use Carbon\Carbon;
 use http\Env\Request;
 
@@ -276,9 +277,487 @@ class KaiOSController extends Controller
         print_r($notify); die;
     }
 
+    public function challenges() {
+
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/oauth2/v1.0/challenges', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "POST /oauth2/v1.0/challenges",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+        $response = $hawk->sendRequest('/oauth2/v1.0/challenges', 'POST', $header);
+        print_r($response); die;
+    }
+
+    public function challengeCompletion() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array("challenge_id"=>"e2NiOgogbh6b25X3p2TQ",
+            "service_id" => "e2NiOgogbh6b25X3p2TQ","device_type"=>array("device_type"=>10,
+            "brand"=> "AlcatelOneTouch",
+            "model"=> "GoFlip2","reference"=>"4044O-2AAQUS0",
+            "reference"=> "4044O-2AAQUS0",
+            "os"=> "KaiOS",
+            "os_version"=> "2.5",
+            "device_id" => "453219216871884",
+            "icc_mcc" => "04",
+            "icc_mnc"=> "321",
+            "net_mnc"=> "321",
+            )), true);
 
 
-    
+        $encoded_hash = $hawk->normalizePayload($params);
+
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+            '/oauth2/v1.0/challenges/e2NiOgogbh6b25X3p2TQ', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "PUT /oauth2/v1.0/challenges/e2NiOgogbh6b25X3p2TQ",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/oauth2/v1.0/challenges/e2NiOgogbh6b25X3p2TQ', 'PUT', $header,$params);
+        print_r($notify); die;
+    }
+
+
+    public function secureToken() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array("imei"=>"453219216871884",
+            "service_id" => "e2NiOgogbh6b25X3p2TQ","data"=>"iCRbf7xosZoM7uwPjjaw9Xhx0ICU5ybq7JVwzAR4yxfoMYiS7n5hFoRdJ5LM0GIsuAyIcQU2t0x2
+1+7jAiFSQt7OK4Jj6rf+j1l83K1StYKSfrTl6TrUyfIzwQYNme2e+yLWp3sRvvzd8Sa90udVHD3DC1X1Oyeiq6RNqAY
+CEg0+ZHnuphpm+58aSLBQtqfBfK5wpLR8Ncm7OmRbaV+zJrZJBZeJ6lVBUYOKBNzE9+OeKfXstVxxUjP4GKF7xE
+tmmZ3FUFb463QC6ef6+IIip52vnBZCIn8Wh5slPOPMzshbbkUmlItCWPnXEbF08djrGe3JbglZZjOK8+38jVgEJlN
+Oeictg1UsEBj9f6DD7I4KQo="), true);
+
+
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/oauth2/v1.0/secured_tokens', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /oauth2/v1.0/secured_tokens",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/oauth2/v1.0/secured_tokens', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
+
+    public function pushsubs() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array("push_type"=>5000,
+            "push_subsc" => "eyJlbmRwb2ludCI6Imh0dHBzOi8vcHVzaC5rYWlvc3RlY2guY29tOjg0NDMvd3B1c2gvdjIvZ0FBQUFBQmM5YX
+NETWNOMTM4cFJtLTFDcTY3ZkZWdWRBS2pJcGRucU1CT1AyYlFKakoxZG9Zd2o4OUZVSGZpWUt4NVBLbjNQ
+czJSWXFsTHNjLXR1OTdrWnNFdHJYV0QwVmtTWkxsdXRlMEFYalhMRFFQVFdxM0JLTU9HRF9DbnpFcFM2VVJ
+6alBNcHI3bW9TaWVJWTNMZ2QxZlVGbXRLcXhfcHBMeGp3RzZROWZ6REVsT2lLM0UwIiwia2V5cyI6eyJhdXR
+oIjoiNGRxcWk3QWRGOGw0S25GcTFabzMxUSIsInAyNTZkaCI6IkJCM1M3SVpuUHIwckctT1FJRXo1NzVabHFTR
+3ZpQS0yUF9vYnlHUk13Yk5HdDBPY2NFbk13S3lJSy0wSkNFZGVYcndwN2JRb0tuelc3N2lWLVhtYkt2NCJ9fQ==","app_id"=>"e2NiOgogbh6b25X3p2TQ"), true);
+
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_fe/v1.0/pushsubs', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /oauth2/v1.0/secured_tokens",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_fe/v1.0/pushsubs', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
+
+
+    public function pingResponse() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array("next_reminder"=> 1560187101,
+                                    "reminder_executed"=>2,
+                                    "next_warning"=> 1565419925,
+                                    "warning_executed"=>2,
+                                    "next_overdue"=>1569500000,
+                                    "overdue_execured"=>1,
+                                    "next_lock"=>1569540362,
+                                    "lock_executed"=>1
+                                    ), true);
+
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+            '/oauth2/v1.0/challenges/e2NiOgogbh6b25X3p2TQ', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "PUT /oauth2/v1.0/challenges/e2NiOgogbh6b25X3p2TQ",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/oauth2/v1.0/challenges/e2NiOgogbh6b25X3p2TQ', 'PUT', $header,$params);
+        print_r($notify); die;
+    }
+
+
+    public function deviceFetchCommands() {
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'GET',
+            '/financier_fe/v1.0/cmds', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "GET /financier_fe/v1.0/cmds",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+
+        $response = $hawk->sendRequest('/financier_fe/v1.0/cmds', 'GET', $header);
+        print_r($response); die;
+    }
+
+
+    public function deviceAckCommandExecution() {
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'DELETE',
+            '/financier_fe/v1.0/cmds/{msg id}?ack=true', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "DELETE /financier_fe/v1.0/cmds/{msg id}?ack=true",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+
+        $response = $hawk->sendRequest('/financier_fe/v1.0/cmds/{msg id}?ack=true', 'DELETE', $header);
+        print_r($response); die;
+    }
+
+
+    public function deviceFinancierRegistrationInitiation() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array("imei" => "453219216871884"),
+                                    true);
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_fe/v1.0/registrations', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /financier_fe/v1.0/registrations",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_fe/v1.0/registrations', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
+
+    public function deviceFinancierRegistrationCompletion() {
+
+            $current_timestamp = Carbon::now('UTC')->timestamp;
+
+            $hawk = new \Hawk();
+            $nonce = $hawk->generateNonce();
+
+            $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+                '/financier_fe/v1.0/registrations/{id}', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+            $curl = curl_init();
+            $header = array(
+                "PUT /financier_fe/v1.0/registrations/{id}",
+                "Host: api.test.kaiostech.com:443",
+                "Content-Type: application/json",
+                "Content-Size: 1255",
+                'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+            );
+
+            $response = $hawk->sendRequest('/financier_fe/v1.0/registrations/{id}', 'PUT', $header);
+            print_r($response); die;
+        }
+
+    public function fetchAllDevices() {
+
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+            '/financier_be/v1.0/devices', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "GET /financier_be/v1.0/devices",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+
+        $response = $hawk->sendRequest('/financier_be/v1.0/devices', 'GET', $header);
+        print_r($response); die;
+    }
+
+
+
+
+    public function fetchSpecificDeviceOfanAccount() {
+
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+            '/financier_be/v1.0/devices/{imei}', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "GET /financier_be/v1.0/devices/{imei}",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+
+        $response = $hawk->sendRequest('/financier_be/v1.0/devices/{imei}', 'GET', $header);
+        print_r($response); die;
+    }
+
+
+    public function fetchRealTimeDeviceStatus() {
+
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+            '/financier_be/v1.0/devices/{imei}/ping', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "GET /financier_be/v1.0/devices/{imei}/ping",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+
+        $response = $hawk->sendRequest('/financier_be/v1.0/devices/{imei}/ping', 'GET', $header);
+        print_r($response); die;
+    }
+
+    public function fetchCmdQueueofSpecificDevice() {
+
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+
+        $hawk = new \Hawk();
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'PUT',
+            '/financier_be/v1.0/devices/{imei}/cmd[?deleted=true]', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=');
+
+        $curl = curl_init();
+        $header = array(
+            "GET /financier_be/v1.0/devices/{imei}/cmd[?deleted=true]",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts='.$current_timestamp.', nonce="'.$nonce.'", mac="'.$compute_header.'"'
+        );
+
+        $response = $hawk->sendRequest('/financier_be/v1.0/devices/{imei}/cmd[?deleted=true]', 'GET', $header);
+        print_r($response); die;
+    }
+
+
+    public function notifyDeviceInstallmentPayment() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array(
+            "next_pay_dl"=> 1569540362,
+            "next_reminder"=> 1560187101,
+            "next_warning"=> 1565419925,
+            "next_overdue"=> 1569500000,
+            "next_lock"=> 1569540362
+        ), true);
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_be/v1.0/devices/{imei}/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /financier_be/v1.0/devices/{imei}/notify_paid",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/{imei}/notify_paid', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
+
+    public function massDevicePayment() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array(
+            "390101540012341"=> array("next_pay_dl"=>1569540362,"next_reminder"=>1560187101,"next_warning"=>
+                                            1565419925, "next_overdue"=>1569500000, "next_lock"=>1569540362),
+            "390101540075318"=> array("next_pay_dl"=>1579540362,"next_reminder"=>1560187101,"next_warning"=>
+                1565419925, "next_overdue"=>1569500000, "next_lock"=>1569540362),
+            "390101540509512"=> array("next_pay_dl"=>1579540362,"next_reminder"=>1560187101,"next_warning"=>
+                1565419925, "next_overdue"=>1569500000, "next_lock"=>1569540362)
+        ), true);
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_be/v1.0/devices/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /financier_be/v1.0/devices/notify_paid",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/notify_paid', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
+
+
+    public function notifyDeviceCreditCompletion() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params = json_encode(array("msg"=>"Congratulation. Your last payment has been received. Your device has now been definitely unlocked.",)
+        , true);
+
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_be/v1.0/devices/{imei}/notify_credit_completed', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /financier_be/v1.0/devices/{imei}/notify_credit_completed",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/{imei}/notify_credit_completed', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
+    public function massDeviceCreditCompletion() {
+
+        $hawk = new \Hawk();
+        $current_timestamp = Carbon::now('UTC')->timestamp;
+        $params =json_encode(array(
+            "390101540012341"=> array("msg"=>"Congratulation. Your last payment has been received. Your device has now been definitely unlocked."),
+            "390101540075318"=> array("msg"=>"Congratulation. Your last payment has been received. Your device has now been definitely unlocked."),
+            "390101540509512"=> array("msg"=>"Congratulation. Your last payment has been received. Your device has now been definitely unlocked."),
+        ), true);
+
+
+        $encoded_hash = $hawk->normalizePayload($params);
+
+        $nonce = $hawk->generateNonce();
+
+        $compute_header = $hawk->normalizedHeader($current_timestamp, $nonce, 'POST',
+            '/financier_be/v1.0/devices/notify_paid', 'Pt7JF+4lzf/tVZitJIcKVbaddUVBPzqCEnbui6ng88c=',$encoded_hash);
+
+        $header = array(
+            "POST /financier_be/v1.0/devices/notify_paid",
+            "Host: api.test.kaiostech.com:443",
+            "Content-Type: application/json",
+            "Content-Size: 1255",
+            'Authorization: Hawk id="MrjBt/9Mkx73PyaTh7AyGh6STnI=", ts=' . $current_timestamp . ', nonce="' . $nonce . '",  mac="' . $compute_header . '"'
+        );
+
+        $notify = $hawk->sendRequest('/financier_be/v1.0/devices/notify_paid', 'POST', $header,$params);
+        print_r($notify); die;
+    }
+
 
     /*Array
     (

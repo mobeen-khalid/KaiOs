@@ -96,11 +96,11 @@ class Hawk {
 
         $server_output = curl_exec($curl);
 
-        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 //        $header = substr($server_output, 0, $header_size);
 //        $body = substr($server_output, $header_size);
         $object = json_decode($server_output);
-        return json_decode(json_encode($object), true);
+        return array('status_code' => $httpcode, "response" => json_decode(json_encode($object), true));
     }
 
 }
